@@ -2,27 +2,33 @@
 using DynamicExecutor.Common;
 using System.IO.Compression;
 using System.Reflection;
-using System.Runtime.Loader;
 
-// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+// Get where is the zipped plugin, in real life, could be somewhere downloaded from database or BlobStorage
+var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+var executorZipFileName = Path.GetFullPath(Path.Combine(currentPath, "..", "..", "..", "..", "Buffer", "Executor1.zip"));
 
-const string executorZipFileName = @"C:\Work\DynamicExecutor\Buffer\Executor1.zip";
+// Create a temp folder and extract the zipped plugin into it
 var fn = Path.GetTempFileName();
 string extractedTempPath = Path.Join(Path.GetDirectoryName(fn), Path.GetFileNameWithoutExtension(fn));
-File.Delete(extractedTempPath);
+if (File.Exists(extractedTempPath))
+{
+    File.Delete(extractedTempPath);
+}
 Directory.CreateDirectory(extractedTempPath);
-extractedTempPath += Path.DirectorySeparatorChar;
-ZipFile.ExtractToDirectory(executorZipFileName, extractedTempPath);
-var executorFile = Path.Join(extractedTempPath, "Executor1.dll");
 
+// Extract it
+ZipFile.ExtractToDirectory(executorZipFileName, extractedTempPath);
+
+
+// I hardcoded the name of the DLL and the class name of the tasks, in real life probably 
+// you'll put them into some sort of manifestal file
+
+var executorFile = Path.Join(extractedTempPath, "Executor1.dll");
 var loadContext = new ExecutorAssemblyLoadContext(executorFile);
 try
 {
     var assembly = loadContext.LoadFromAssemblyPath(executorFile);
-
     var type = assembly.GetType("Executor1.QueryTask1");
-
     if (type != null && typeof(IWarehouseQuery).IsAssignableFrom(type))
     {
         var query = Activator.CreateInstance(type) as IWarehouseQuery;
@@ -36,5 +42,6 @@ try
 }
 finally
 {
+    // Unload it once done. 
     loadContext.Unload();
 }
