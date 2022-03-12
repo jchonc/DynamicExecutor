@@ -9,9 +9,11 @@ namespace Executor1
         {
             var result = new { 
                 Name = "Jian",
-                Age = 50
+                Age = 51
             };
-            return someParams + Newtonsoft.Json.JsonConvert.SerializeObject(result);
+            var temp = someParams + Newtonsoft.Json.JsonConvert.SerializeObject(result);
+            result = null;
+            return temp;
         }
     }
 }
