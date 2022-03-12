@@ -23,7 +23,7 @@
   
   <Target Name="ZipDeploy" AfterTargets="Build">
     <Message Text="Zip the output and copy to target folder" Importance="High" />
-	<ZipDirectory SourceDirectory="$(TargetDir)" DestinationFile="C:\Work\DynamicExecutor\Buffer\Executor1.zip" Overwrite="true" />
+	<ZipDirectory SourceDirectory="$(TargetDir)" DestinationFile="$(SolutionDir)\Buffer\Executor1.zip" Overwrite="true" />
   </Target>
 
 </Project>
