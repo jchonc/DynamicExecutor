@@ -12,9 +12,9 @@ namespace DynamicExecutor
     {
         private AssemblyDependencyResolver _resolver;
 
-        public ExecutorAssemblyLoadContext(string pluginPath) : base(isCollectible: true)
+        public ExecutorAssemblyLoadContext(string path) : base(isCollectible: true)
         {
-            _resolver = new AssemblyDependencyResolver(pluginPath);
+            _resolver = new AssemblyDependencyResolver(path);
         }
 
         protected override Assembly Load(AssemblyName assemblyName)

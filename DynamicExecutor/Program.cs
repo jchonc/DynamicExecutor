@@ -8,15 +8,18 @@ using System.Runtime.Loader;
 Console.WriteLine("Hello, World!");
 
 const string executorZipFileName = @"C:\Work\DynamicExecutor\Buffer\Executor1.zip";
-string extractedTempPath = Path.GetTempFileName();
+var fn = Path.GetTempFileName();
+string extractedTempPath = Path.Join(Path.GetDirectoryName(fn), Path.GetFileNameWithoutExtension(fn));
 File.Delete(extractedTempPath);
 Directory.CreateDirectory(extractedTempPath);
+extractedTempPath += Path.DirectorySeparatorChar;
 ZipFile.ExtractToDirectory(executorZipFileName, extractedTempPath);
+var executorFile = Path.Join(extractedTempPath, "Executor1.dll");
 
-var loadContext = new ExecutorAssemblyLoadContext(extractedTempPath);
+var loadContext = new ExecutorAssemblyLoadContext(executorFile);
 try
 {
-    var assembly = loadContext.LoadFromAssemblyPath(Path.Join(extractedTempPath, "Executor1.dll"));
+    var assembly = loadContext.LoadFromAssemblyPath(executorFile);
 
     var type = assembly.GetType("Executor1.QueryTask1");
 
@@ -29,15 +32,9 @@ try
             Console.WriteLine(result);
         }
     }
+    Console.ReadKey();
 }
 finally
 {
     loadContext.Unload();
 }
-
-
-
-
-
-
-

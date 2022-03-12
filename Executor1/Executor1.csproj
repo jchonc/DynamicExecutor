@@ -5,10 +5,20 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<AssemblyName>Executor1</AssemblyName>
+	<EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommonInterfaces\CommonInterfaces.csproj" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1">
+		<IncludeAssets>all</IncludeAssets>
+	</PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+	<ProjectReference Include="..\CommonInterfaces\CommonInterfaces.csproj">
+		<Private>false</Private>
+        <ExcludeAssets>runtime</ExcludeAssets>
+	</ProjectReference>	
   </ItemGroup>
   
   <Target Name="ZipDeploy" AfterTargets="Build">
